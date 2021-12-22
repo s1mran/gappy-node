@@ -43,7 +43,7 @@ router.post("/register", (req, res) => {
                             // Sign token
                             jwt.sign(
                                 payload,
-                                process.env.SECRET_OR_KEY,
+                                'k0un5OW6mFcnjcjGwdL1R593u9lm88B7gYZeTYSPhSHLtH7NnKvTAmcWEG9fmPSQ',//process.env.SECRET_OR_KEY,
                                 {
                                     expiresIn: 31556926 // 1 year in seconds
                                 },
@@ -92,7 +92,7 @@ router.post("/login", (req, res) => {
                 // Sign token
                 jwt.sign(
                     payload,
-                    process.env.SECRET_OR_KEY,
+                    'k0un5OW6mFcnjcjGwdL1R593u9lm88B7gYZeTYSPhSHLtH7NnKvTAmcWEG9fmPSQ',//process.env.SECRET_OR_KEY,
                     {
                         expiresIn: 31556926 // 1 year in seconds
                     },
