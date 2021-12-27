@@ -26,9 +26,6 @@ const GiftSchema = new Schema({
         type: String,
         required: true
     },
-    message: {
-        type: String,
-    },
     subject: {
         type: String,
     },

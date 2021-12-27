@@ -28,11 +28,6 @@ router.post("/new-order", auth, (req, res) => {
         })
 })
 
-// {
-//     "orderId": "11", "paymentId": "11", "sig": "111", "currency": "btc", "units": "0.001", "deliveryType": "email", "recipientName": "nisha", 
-//     "senderName": "simran", "recipientEmail": "kaursimransidhu1@gmail.com", "senderEmail": "nishaposwal321@gmail.com", "subject": "test mail cryft", "message": " cryft message"
-// }
-
 router.post("/verify-and-add-gift", auth, async (req, res) => {
     if (!req.user._id)
         res.status(401).send("User unauthorized")
@@ -52,7 +47,6 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
         const newGift = new Gift({
             ...rest,
             subject: subject,
-            message: "mailBody",
             reedemCode: reedemCode,
             senderId: req.user._id
         });
