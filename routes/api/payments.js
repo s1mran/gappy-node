@@ -33,7 +33,7 @@ router.post("/new-order", auth, (req, res) => {
 //     "senderName": "simran", "recipientEmail": "kaursimransidhu1@gmail.com", "senderEmail": "nishaposwal321@gmail.com", "subject": "test mail cryft", "message": " cryft message"
 // }
 
-router.post("/verify-and-buy-gift", auth, async (req, res) => {
+router.post("/verify-and-add-gift", auth, async (req, res) => {
     if (!req.user._id)
         res.status(401).send("User unauthorized")
 
