@@ -22,7 +22,7 @@ router.post("/register", (req, res) => {
 
     User.findOne({ email: req.body.email }).then(user => {
         if (user) {
-            return res.status(400).json({ email: "Email is already associated with a user, please proceed with login." });
+            return res.status(400).send("Email already exists, please login");
         } else {
             const newUser = new User({
                 name: req.body.name,
@@ -30,15 +30,16 @@ router.post("/register", (req, res) => {
                 password: req.body.password
             });
             bcrypt.genSalt(10, (err, salt) => {
+                if (err) res.send(500).send(err);
                 bcrypt.hash(newUser.password, salt, (err, hash) => {
-                    if (err) throw err;
+                    if (err) res.send(500).send(err);
                     newUser.password = hash;
                     newUser
                         .save()
                         .then(user => {
                             const payload = {
-                                id: user.id,
-                                name: user.name
+                                _id: user._id,
+                                email: user.email
                             };
                             // Sign token
                             jwt.sign(
@@ -48,14 +49,16 @@ router.post("/register", (req, res) => {
                                     expiresIn: 31556926 // 1 year in seconds
                                 },
                                 (err, token) => {
-                                    res.json({
+                                    if (err)
+                                        res.status(500).send(err);
+                                    res.status(201).json({
                                         success: true,
-                                        token: "Bearer " + token
+                                        token: token
                                     });
                                 }
                             );
                         })
-                        .catch(err => console.log(err));
+                        .catch(err => res.send(400).send(err));
                 });
             });
         }
@@ -80,14 +83,14 @@ router.post("/login", (req, res) => {
 
     User.findOne({ email }).then(user => {
         if (!user) {
-            return res.status(404).json({ emailnotfound: "Email not found" });
+            return res.status(404).send("Email not found" );
         }
         // Check password
         bcrypt.compare(password, user.password).then(isMatch => {
             if (isMatch) {
                 const payload = {
-                    id: user.id,
-                    name: user.name
+                    _id: user._id,
+                    email: user.email
                 };
                 // Sign token
                 jwt.sign(
@@ -97,16 +100,18 @@ router.post("/login", (req, res) => {
                         expiresIn: 31556926 // 1 year in seconds
                     },
                     (err, token) => {
-                        res.json({
+                        if (err)
+                            res.status(500).send(err);
+                        res.status(200).json({
                             success: true,
-                            token: "Bearer " + token
+                            token: token
                         });
                     }
                 );
             } else {
                 return res
                     .status(400)
-                    .json({ passwordincorrect: "Password incorrect" });
+                    .send("Password incorrect" );
             }
         });
     });

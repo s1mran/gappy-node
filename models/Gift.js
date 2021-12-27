@@ -14,23 +14,23 @@ const GiftSchema = new Schema({
     },
     recipientName: {
         type: String,
-        required: true
     },
     senderName: {
         type: String,
-        required: true
     },
     recipientEmail: {
         type: String,
         required: true
     },
-    senderEmail: {
+    senderId: {
         type: String,
         required: true
     },
     message: {
         type: String,
-        required: true
+    },
+    subject: {
+        type: String,
     },
     deliveryType: {
         type: String,

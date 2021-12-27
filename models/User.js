@@ -1,6 +1,12 @@
+const { KeyObject } = require("crypto");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
+
+const currencySchema = new Schema({
+    name: String,
+    amount: Number
+});
 
 // Create Schema
 const UserSchema = new Schema({
@@ -22,6 +28,7 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    currencies: [currencySchema],
     createdAt: {
         type: Date,
         immutable: true,

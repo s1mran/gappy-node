@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        .giftBox {
+            padding: 20px;
+            border: 2px solid #FD6A7E;
+            border-radius: 10px;
+            margin: 20px;
+            width: 200px;
+        }
+
+        .row {
+            display: flex;
+            width: inherit;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+
+        .col {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+        }
+
+        .center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .headline {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 5px;
+        }
+
+        img {
+            margin: 10px;
+        }
+
+        .small {
+            font-size: 12px;
+        }
+
+        .normal {
+            font-size: 16px;
+        }
+
+        .code {
+            background-color: hsla(197, 80%, 67%, 0.527);
+            padding: 5px;
+            border: 2px dashed hsl(197, 80%, 67%);
+            border-radius: 10px;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text normal">
+        Dear {{receiverName}},
+    </div>
+    <div class="giftBox">
+        <img src="cid:gift" height="100" width="100">
+        <div class="text headline">A Crypto Gift</div>
+        <div class="text small">from {{senderName}}</div>
+    </div>
+    <div class="text normal">
+        You have been gifted {{crypto}} as gift by {{senderName}}. Please visit https://cryft.in and use code <span
+            class="code">{{code}}</span> in my gifts section after logging in. <br><br>
+        We hope you like the gift present to you, and it strengthens your crypto currency universe's journey. <br> Please
+        explore the website, it can be used to gift crypto or to build your crypto portfolio.
+    </div>
+    <div class="text normal">
+        <br>
+        <br>
+        Thanks and Regards
+        <br>
+        Team Cryft
+    </div>
+</body>
+
+</html>
