@@ -44,7 +44,6 @@ async function sendMail(subject, senderUserName, senderUserEmail, receiverUserNa
        }]
     };
 
-    console.log(__dirname);
     await transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
             return err;

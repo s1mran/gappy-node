@@ -3,6 +3,13 @@ function createRandomInt (minRandNum, maxRandNum) {
     return randomInteger;
 }
 
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
 module.exports = {
-    createRandomInt
+    createRandomInt,
+    sleep
 }

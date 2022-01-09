@@ -42,17 +42,17 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
         .digest("hex");
 
     if (signature == sig) {
-        const reedemCode = "CRYFT" + createRandomInt(minRandNum, maxRandNum);
+        const redeemCode = "CRYFT" + createRandomInt(minRandNum, maxRandNum);
         const subject = createMailSubject(req.user.name);
         const newGift = new Gift({
             ...rest,
             subject: subject,
-            reedemCode: reedemCode,
+            redeemCode: redeemCode,
             senderId: req.user._id
         });
 
         try {
-            await sendMail(subject, req.user.name, req.user.email, recipientName, recipientEmail, currency, reedemCode);
+            await sendMail(subject, req.user.name, req.user.email, recipientName, recipientEmail, currency, redeemCode);
         } catch (e) {
             res.status(500).send(e);
         }

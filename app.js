@@ -7,8 +7,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const users = require("./routes/api/users");
-
 const payments = require("./routes/api/payments");
+const gifts = require("./routes/api/gifts");
+const commons = require("./routes/api/commons");
+ 
 
 const app = express();
 
@@ -41,6 +43,8 @@ require("./config/passport")(passport);
 // Routes
 app.use("/api/users", users);
 app.use("/api/payments", payments);
+app.use("/api/gifts", gifts);
+app.use("/api", commons);
 
 const port = process.env.PORT || 5000; // process.env.port is Heroku's port if we choose to deploy the app there
 

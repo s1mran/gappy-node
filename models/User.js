@@ -4,8 +4,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const currencySchema = new Schema({
-    name: String,
-    amount: Number
+    currency: String,
+    money: Number
 });
 
 // Create Schema

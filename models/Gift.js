@@ -8,14 +8,11 @@ const GiftSchema = new Schema({
         type: String,
         required: true
     },
-    units: {
+    money: {
         type: String,
         required: true
     },
     recipientName: {
-        type: String,
-    },
-    senderName: {
         type: String,
     },
     recipientEmail: {
@@ -37,9 +34,13 @@ const GiftSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    reedemCode: {
+    redeemCode: {
         type: String,
         required: true
+    },
+    redeemed: {
+        type: Boolean,
+        default: false
     },
     createdAt: {
         type: Date,
@@ -50,6 +51,9 @@ const GiftSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    redeemedAt: {
+        type: Date
+    }
 });
 
 module.exports = User = mongoose.model("gifts", GiftSchema);

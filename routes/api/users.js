@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const auth = require("../../middleware/auth");
+
 
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
@@ -83,7 +85,7 @@ router.post("/login", (req, res) => {
 
     User.findOne({ email }).then(user => {
         if (!user) {
-            return res.status(404).send("Email not found" );
+            return res.status(404).send("Email not found");
         }
         // Check password
         bcrypt.compare(password, user.password).then(isMatch => {
@@ -111,10 +113,21 @@ router.post("/login", (req, res) => {
             } else {
                 return res
                     .status(400)
-                    .send("Password incorrect" );
+                    .send("Password incorrect");
             }
         });
     });
 });
+
+router.get("/profile", auth, (req, res) => {
+    if (!req.user._id)
+    res.status(401).send("User unauthorized")
+
+    User.findById(req.user._id, {name: true, email: true, currencies: true, _id: false}).then(user => {
+        if (!user)
+            return res.status(404).send('User not found')
+        res.status(200).send(user);
+    })
+})
 
 module.exports = router;
