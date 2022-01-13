@@ -1,29 +1,7 @@
 const nodeMailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 
-async function sendMail(subject, senderUserName, senderUserEmail, receiverUserName, receiverUserEmail, currency, reedemCode) {
-    let transporter = nodeMailer.createTransport({
-        host: "smtp.zoho.com",
-        secure: true,
-        port: 465,
-        auth: {
-            user: process.env.EMAIL_ADDRESS,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    });
-
-    var options = {
-        viewEngine: {
-            extname: '.handlebars',
-            layoutsDir: 'views',
-            defaultLayout: 'index'
-        },
-        viewPath: 'views',
-        extName: '.handlebars'
-    };
-
-    transporter.use('compile', hbs(options))
-
+async function sendGiftMail(subject, senderUserName, senderUserEmail, receiverUserName, receiverUserEmail, currency, reedemCode) {
     const mailOptions = {
         from: process.env.EMAIL_ADDRESS, // sender address
         to: receiverUserEmail,
@@ -43,11 +21,51 @@ async function sendMail(subject, senderUserName, senderUserEmail, receiverUserNa
             cid: 'gift' 
        }]
     };
+    await sendMail(mailOptions, 'index');
+}
+
+async function sendForgetPassMail(receiverUserEmail, resetLink) {
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS, // sender address
+        to: receiverUserEmail,
+        subject: 'Kilope password reset', // Subject line
+        template: 'forget-pass',
+        context: {
+            resetLink: resetLink
+        }
+    };
+    return await sendMail(mailOptions, 'forget-pass');
+}
+
+async function sendMail(mailOptions, template) {
+    let transporter = nodeMailer.createTransport({
+        host: "smtp.zoho.com",
+        secure: true,
+        port: 465,
+        auth: {
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD,
+        },
+    });
+
+    var options = {
+        viewEngine: {
+            extname: '.handlebars',
+            layoutsDir: 'views',
+            defaultLayout: template
+        },
+        viewPath: 'views',
+        extName: '.handlebars'
+    };
+
+    transporter.use('compile', hbs(options))
 
     await transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
+            console.log(err)
             return err;
         } else {
+            console.log(info)
             return info;
         }
     })
@@ -62,6 +80,7 @@ function createMailSubject(senderName) {
 }
 
 module.exports = {
-    sendMail,
+    sendGiftMail,
+    sendForgetPassMail,
     createMailSubject
 };

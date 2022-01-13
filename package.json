@@ -25,6 +25,7 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "razorpay": "^2.8.0",
+    "uuid": "^8.3.2",
     "validator": "^13.7.0"
   }
 }

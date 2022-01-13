@@ -8,6 +8,15 @@ const currencySchema = new Schema({
     money: Number
 });
 
+const bankDetails = new Schema ({
+    ifscCode :String,
+    address: String,
+    branch: String,
+    bankName: String,
+    accountNumber: String,
+    accountHolderName: String,
+  })
+
 // Create Schema
 const UserSchema = new Schema({
     name: {
@@ -38,6 +47,14 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    forgPassToken: {
+        type: String,
+    },
+    contactNo: {
+        type: String
+    },
+    bankDetails: bankDetails
 });
+
 
 module.exports = User = mongoose.model("users", UserSchema);

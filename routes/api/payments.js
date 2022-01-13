@@ -3,7 +3,7 @@ const router = express.Router();
 const crypto = require("crypto");
 const razorpay = require("razorpay");
 const Gift = require("../../models/Gift");
-const { sendMail, createMailSubject } = require('../../utils/mailer')
+const { sendGiftMail, createMailSubject } = require('../../utils/mailer')
 const { createRandomInt } = require('../../utils/commons')
 const { minRandNum, maxRandNum } = require('../../config/constants');
 const auth = require("../../middleware/auth");
@@ -52,7 +52,7 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
         });
 
         try {
-            await sendMail(subject, req.user.name, req.user.email, recipientName, recipientEmail, currency, redeemCode);
+            await sendGiftMail(subject, req.user.name, req.user.email, recipientName, recipientEmail, currency, redeemCode);
         } catch (e) {
             res.status(500).send(e);
         }

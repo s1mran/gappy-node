@@ -21,4 +21,21 @@ router.get("/ifsc/:code", auth, async (req, res) => {
     });
 })
 
+router.get("/ticker/:symbol", auth, (req, res) => {
+    if (!req.user._id)
+        res.status(401).send("User unauthorized")
+    var symbol = req.params.symbol;
+    if (!symbol)
+        res.status(400).send('Invalid currency symbol')
+    request({
+        url: "https://api.wazirx.com/sapi/v1/ticker/24hr?symbol=" + symbol,
+        method: "GET"
+    }, function (error, response, body) {
+        if (error)
+            res.status(400).send(error);
+        if (response)
+            res.status(200).send(response);
+    });
+})
+
 module.exports = router;

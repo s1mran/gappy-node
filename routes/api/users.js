@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { sendForgetPassMail } = require('../../utils/mailer')
 const auth = require("../../middleware/auth");
-
+const { v4 } = require("uuid");
 
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
 
 const User = require("../../models/User");
+const PasswordReset = require("../../models/PassReset");
 
 /*
 *   @route POST api/users/register
@@ -121,13 +123,98 @@ router.post("/login", (req, res) => {
 
 router.get("/profile", auth, (req, res) => {
     if (!req.user._id)
-    res.status(401).send("User unauthorized")
+        res.status(401).send("User unauthorized")
 
-    User.findById(req.user._id, {name: true, email: true, currencies: true, _id: false}).then(user => {
+    User.findById(req.user._id, { password: false, _id: false }).then(user => {
         if (!user)
             return res.status(404).send('User not found')
         res.status(200).send(user);
     })
+})
+
+router.post('/reset-link-mail', async (req, res) => {
+    const { email } = req.body;
+    if (!email || !email.length)
+        res.status(400).send("Invalid email")
+    User.findOne({ 'email': email }).then(async (user) => {
+        if (!user)
+            res.status(400).send("No user found for given email")
+        const token = v4().toString().replace(/-/g, '')
+        PasswordReset.updateOne({
+            user: user._id
+        }, {
+            user: user._id,
+            token: token
+        }, {
+            upsert: true
+        }, function (err, docs) {
+            if (err) {
+                console.log(err)
+            }
+            else {
+                console.log("Updated passreset : ", docs);
+            }
+        })
+        const resetLink = `${req.headers.host}/reset-password/${token}`;
+        try {
+            sendForgetPassMail(email, resetLink).then(ress => {
+                res.status(200).json({
+                    success: true,
+                    link: resetLink
+                })
+            });
+        }
+        catch (error) {
+            return res.status(500).send(error)
+        }
+    })
+})
+
+router.post('/reset-password', async (req, res) => {
+    const { token, password } = req.body;
+    const passwordReset = await PasswordReset.findOne({ token }).then(pass => {
+        if (!pass)
+            res.status(400).send("Invalid or expired token")
+        User.findOne({ _id: pass.user }).then(user => {
+            if (!user)
+                res.status(400).send("No user for input token")
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) res.send(500).send(err);
+                bcrypt.hash(password, salt, (err, hash) => {
+                    if (err) res.send(500).send(err);
+                    User.updateOne({ _id: user._id }, { password: hash })
+                        .then(async (user) => {
+                            await PasswordReset.deleteOne({ _id: pass._id })
+                            res.status(201).send("Password has been reset.")
+                        });
+                });
+            })
+        })
+    })
+})
+
+router.post('/edit-profile', auth, (req, res) => {
+    if (!req.user._id)
+        res.status(401).send("User unauthorized")
+    let {
+        name, email, contactNo, bankDetails
+    } = req.body;
+    const userId = req.user._id;
+    User.findById(userId).then(user => {
+        name = name || user.name || '';
+        email = email || user.email || '';
+        contactNo = contactNo || user.contactNo || '';
+        bankDetails = bankDetails || user.bankDetails || null;
+        console.log(name, email, contactNo, bankDetails)
+        User.updateOne({ _id: userId }, { name: name, email: email, contactNo: contactNo, bankDetails: { ...bankDetails } }, function (err, info) {
+            if (err)
+                res.status(500).send(err);
+            if (info) {
+                res.status(204).send("User updated");
+            }
+        });
+    })
+
 })
 
 module.exports = router;
