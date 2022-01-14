@@ -132,6 +132,28 @@ router.get("/profile", auth, (req, res) => {
     })
 })
 
+router.post('/edit-profile', auth, (req, res) => {
+    if (!req.user._id)
+        res.status(401).send("User unauthorized")
+    let {
+        name, email, contactNo, bankDetails
+    } = req.body;
+    const userId = req.user._id;
+    User.findById(userId).then(user => {
+        name = name || user.name || '';
+        email = email || user.email || '';
+        contactNo = contactNo || user.contactNo || '';
+        bankDetails = bankDetails || user.bankDetails || null;
+        User.updateOne({ _id: userId }, { name: name, email: email, contactNo: contactNo, bankDetails: { ...bankDetails } }, function (err, info) {
+            if (err)
+                res.status(500).send(err);
+            if (info) {
+                res.status(204).send("User updated");
+            }
+        });
+    })
+})
+
 router.post('/reset-link-mail', async (req, res) => {
     const { email } = req.body;
     if (!email || !email.length)
@@ -152,17 +174,15 @@ router.post('/reset-link-mail', async (req, res) => {
                 console.log(err)
             }
             else {
-                console.log("Updated passreset : ", docs);
+                console.log("Updated pass reset : ", docs);
             }
         })
-        const resetLink = `${req.headers.host}/reset-password/${token}`;
+        const resetLink = `https://kilope.com/reset-password/${token}`;
         try {
-            sendForgetPassMail(email, resetLink).then(ress => {
+            await sendForgetPassMail(email, resetLink)
                 res.status(200).json({
-                    success: true,
-                    link: resetLink
+                    success: true
                 })
-            });
         }
         catch (error) {
             return res.status(500).send(error)
@@ -191,30 +211,6 @@ router.post('/reset-password', async (req, res) => {
             })
         })
     })
-})
-
-router.post('/edit-profile', auth, (req, res) => {
-    if (!req.user._id)
-        res.status(401).send("User unauthorized")
-    let {
-        name, email, contactNo, bankDetails
-    } = req.body;
-    const userId = req.user._id;
-    User.findById(userId).then(user => {
-        name = name || user.name || '';
-        email = email || user.email || '';
-        contactNo = contactNo || user.contactNo || '';
-        bankDetails = bankDetails || user.bankDetails || null;
-        console.log(name, email, contactNo, bankDetails)
-        User.updateOne({ _id: userId }, { name: name, email: email, contactNo: contactNo, bankDetails: { ...bankDetails } }, function (err, info) {
-            if (err)
-                res.status(500).send(err);
-            if (info) {
-                res.status(204).send("User updated");
-            }
-        });
-    })
-
 })
 
 module.exports = router;

@@ -21,7 +21,7 @@ async function sendGiftMail(subject, senderUserName, senderUserEmail, receiverUs
             cid: 'gift' 
        }]
     };
-    await sendMail(mailOptions, 'index');
+    return await sendMail(mailOptions, 'index');
 }
 
 async function sendForgetPassMail(receiverUserEmail, resetLink) {
@@ -39,7 +39,7 @@ async function sendForgetPassMail(receiverUserEmail, resetLink) {
 
 async function sendMail(mailOptions, template) {
     let transporter = nodeMailer.createTransport({
-        host: "smtp.zoho.com",
+        host: "smtp.zoho.in",
         secure: true,
         port: 465,
         auth: {
