@@ -12,10 +12,10 @@ var secretKey = process.env.WZRX_SECRET_KEY;
 
 router.post("/redeem-gift", auth, async (req, res) => {
     if (!req.user._id)
-        res.status(401).send("User unauthorized")
+        return res.status(401).send("User unauthorized")
     var redeemCode = req.body.reedemCode
     if (redeemCode == 'this_is_redeemed')
-        res.status(400).send('Invalid redeem code');
+        return res.status(400).send('Invalid redeem code');
     Gift.findOne({ 'redeemCode': redeemCode }).then((gift) => {
         if (!gift) {
             return res.status(404).send("Invalid redeem code");
@@ -48,7 +48,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
             //     }
             //     else {
             //         console.log("Updated User : ", docs);
-            //         res.status(201).send('Gift Redeemed');
+            //         return res.status(201).send('Gift Redeemed');
             //     }
             // })
 
@@ -80,10 +80,10 @@ router.post("/redeem-gift", auth, async (req, res) => {
                     function runInterval() {
                         // console.log(response.body)
                         const id = JSON.parse(response.body).id;
-                        queryOrder(id, (resp) => {
+                        queryOrder('2052745292', (resp) => {
                             if (resp.error) {
                                 clearInterval(this);
-                                res.status(500).send(resp.error)
+                                return res.status(500).send(resp.error)
                             }
                             if (resp.resp) {
                                 console.log(JSON.parse(resp.resp.body))
@@ -124,7 +124,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
                                                         }
                                                         else {
                                                             // console.log("Updated User : ", docs);
-                                                            res.status(201).send('Gift Redeemed');
+                                                            return res.status(201).send('Gift Redeemed');
                                                         }
                                                     })
                                                 }
@@ -145,18 +145,17 @@ router.post("/redeem-gift", auth, async (req, res) => {
 
 router.post("/sell-gift", auth, async (req, res) => {
     if (!req.user._id)
-        res.status(401).send("User unauthorized")
+        return res.status(401).send("User unauthorized")
     var { currency, quantity } = req.body
     User.findOne({ _id: req.user._id, 'currencies.currency': currency, 'currencies.quantity': { $gte: new Number(quantity) } }).then(user => {
         if (!user)
-            res.status(404).send("No user found with given currency and quantity");
-        console.log(user.currencies)
+            return res.status(404).send("No user with given currency and quantity");
         var currencies = user.currencies;
         var done = false;
         for (var i = 0; i < currencies.length; i++) {
             if (currencies[i]['currency'] == currency) {
                 if (new Number(quantity) > currencies[i]['quantity'])
-                    res.status(404).send("User has less quantity of currency than input quantity");
+                    return res.status(404).send("User has less quantity of currency than input quantity");
                 done = true;
             }
         }
@@ -172,25 +171,6 @@ router.post("/sell-gift", auth, async (req, res) => {
                     return res.send(500).send(error);
                 var lastPrice = JSON.parse(response.body).lastPrice;
                 console.log(response.body)
-                //     Gift.updateOne({ 'redeemCode': redeemCode }, { 'redeemed': true, 'redeemDate': new Date(), 'redeemCode': 'this_is_redeemed' }, function (err, docs) {
-                //         if (err) {
-                //             console.log(err)
-                //         }
-                //         else {
-                //             console.log("Updated Gift : ", docs);
-                // User.findByIdAndUpdate(req.user._id, { "$push": { "currencies": { 'currency': currency, 'money': money, } } }, function (err, docs) {
-                //     if (err) {
-                //         console.log(err)
-                //     }
-                //     else {
-                //         console.log("Updated User : ", docs);
-                //         res.status(201).send('Gift Redeemed');
-                //     }
-                // })
-
-                //         }
-                //     })
-
                 var data = 'symbol=' + currency + '&side=sell&price=' + lastPrice + '&type=limit&quantity=' + quantity + '&recvWindow=10000&timestamp=' + timestamp;
                 let signature = crypto
                     .createHmac("sha256", secretKey)
@@ -201,7 +181,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                 console.log(quantity)
                 data += '&signature=' + signature;
                 request({
-                    url: "https://api.wazirx.com/sapi/v1/order",
+                    url: "https://api.wazirx.com/sapi/v1/order/test",
                     method: "POST",
                     headers: {
                         'x-api-key': apiKey,
@@ -216,10 +196,10 @@ router.post("/sell-gift", auth, async (req, res) => {
                         function runInterval() {
                             // console.log(response.body)
                             const id = JSON.parse(response.body).id;
-                            queryOrder(id, (resp) => {
+                            queryOrder('2052745292', (resp) => {
                                 if (resp.error) {
                                     clearInterval(this);
-                                    res.status(500).send(resp.error)
+                                    return res.status(500).send(resp.error)
                                 }
                                 if (resp.resp) {
                                     console.log(JSON.parse(resp.resp.body))
@@ -244,7 +224,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                                             }
                                             else {
                                                 // console.log("Updated User : ", docs);
-                                                res.status(201).send('Sold successfully');
+                                                return res.status(201).send('Sold successfully');
                                             }
                                         })
                                     }
@@ -261,7 +241,7 @@ router.post("/sell-gift", auth, async (req, res) => {
 
 router.get("/history", auth, async (req, res) => {
     if (!req.user._id)
-        res.status(401).send("User unauthorized")
+        return res.status(401).send("User unauthorized")
     Gift.find({ senderId: req.user._id }, { redeemCode: false, _id: false }).then(resp => res.status(200).send(resp))
 })
 
