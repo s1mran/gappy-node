@@ -1,3 +1,4 @@
+const { Decipher } = require("crypto");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -53,7 +54,9 @@ const GiftSchema = new Schema({
     },
     redeemedAt: {
         type: Date
-    }
+    },
+    executedQuantity: Number,
+    buyPrice: Number
 });
 
 module.exports = User = mongoose.model("gifts", GiftSchema);

@@ -5,17 +5,18 @@ const Schema = mongoose.Schema;
 
 const currencySchema = new Schema({
     currency: String,
-    money: Number
+    quantity: Number
 });
 
-const bankDetails = new Schema ({
-    ifscCode :String,
+const bankDetails = new Schema({
+    ifscCode: String,
     address: String,
     branch: String,
     bankName: String,
     accountNumber: String,
     accountHolderName: String,
-  })
+    city: String
+})
 
 // Create Schema
 const UserSchema = new Schema({
@@ -53,7 +54,11 @@ const UserSchema = new Schema({
     contactNo: {
         type: String
     },
-    bankDetails: bankDetails
+    bankDetails: bankDetails,
+    balance: {
+        type: Number,
+        default: 0
+    }
 });
 
 
