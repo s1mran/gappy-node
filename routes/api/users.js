@@ -136,15 +136,16 @@ router.patch('/edit-profile', auth, (req, res) => {
     if (!req.user._id)
         res.status(401).send("User unauthorized")
     let {
-        name, email, contactNo, bankDetails
+        name, email, contactNo, bankDetails, img
     } = req.body;
     const userId = req.user._id;
     User.findById(userId).then(user => {
         name = name || user.name || '';
         email = email || user.email || '';
+        img = img || user.img || '';
         contactNo = contactNo || user.contactNo || '';
         bankDetails = bankDetails || user.bankDetails || null;
-        User.updateOne({ _id: userId }, { name: name, email: email, contactNo: contactNo, bankDetails: { ...bankDetails } }, function (err, info) {
+        User.updateOne({ _id: userId }, { name: name, email: email, contactNo: contactNo, bankDetails: { ...bankDetails }, img: img }, function (err, info) {
             if (err)
                 res.status(500).send(err);
             if (info) {
