@@ -132,7 +132,7 @@ router.get("/profile", auth, (req, res) => {
     })
 })
 
-router.patch('/edit-profile', auth, (req, res) => {
+router.post('/edit-profile', auth, (req, res) => {
     if (!req.user._id)
         res.status(401).send("User unauthorized")
     let {
