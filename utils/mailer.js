@@ -17,9 +17,9 @@ async function sendGiftMail(subject, senderUserName, senderUserEmail, receiverUs
         },
         attachments: [{
             filename: 'gift-image.png',
-            path: __dirname +'/../images/gift-image.png',
-            cid: 'gift' 
-       }]
+            path: __dirname + '/../images/gift-image.png',
+            cid: 'gift'
+        }]
     };
     return await sendMail(mailOptions, 'index');
 }
@@ -59,7 +59,6 @@ async function sendMail(mailOptions, template) {
     };
 
     transporter.use('compile', hbs(options))
-
     await transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
             console.log(err)

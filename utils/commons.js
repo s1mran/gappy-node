@@ -9,7 +9,12 @@ function sleep(ms) {
     });
 }
 
+function formatDate(date) {
+  return `${date.getSeconds()} ${date.getMinutes()} ${date.getHours()} ${date.getDate()} ${date.getMonth() + 1} ${date.getDay()}`;
+}
+
 module.exports = {
     createRandomInt,
-    sleep
+    sleep,
+    formatDate
 }

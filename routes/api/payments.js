@@ -2,9 +2,10 @@ let express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
 const razorpay = require("razorpay");
+const cron = require('node-cron');
 const Gift = require("../../models/Gift");
 const { sendGiftMail, createMailSubject } = require('../../utils/mailer')
-const { createRandomInt } = require('../../utils/commons')
+const { createRandomInt, formatDate } = require('../../utils/commons')
 const { minRandNum, maxRandNum } = require('../../config/constants');
 const auth = require("../../middleware/auth");
 
@@ -52,7 +53,13 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
         });
 
         try {
-            await sendGiftMail(subject, req.user.name, req.user.email, recipientName, recipientEmail, currency, redeemCode);
+            const job = cron.schedule(formatDate(new Date(deliveryDateTime)), () => {
+                sendMail();
+            });
+            function sendMail() {
+                sendGiftMail(subject, req.user.name, req.user.email, recipientName, recipientEmail, currency, redeemCode);
+                job.stop();
+            }
         } catch (e) {
             res.status(500).send(e);
         }
