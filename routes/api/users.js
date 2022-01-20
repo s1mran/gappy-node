@@ -142,14 +142,14 @@ router.post('/edit-profile', auth, (req, res) => {
     User.findById(userId).then(user => {
         name = name || user.name || '';
         email = email || user.email || '';
-        img = img || user.img || '';
+        img = img || user.img || null;
         contactNo = contactNo || user.contactNo || '';
         bankDetails = bankDetails || user.bankDetails || null;
         User.updateOne({ _id: userId }, { name: name, email: email, contactNo: contactNo, bankDetails: { ...bankDetails }, img: img }, function (err, info) {
             if (err)
                 res.status(500).send(err);
             if (info) {
-                res.status(200).send(Info);
+                res.status(200).send("User updated");
             }
         });
     })
