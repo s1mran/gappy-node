@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 
 const currencySchema = new Schema({
     currency: String,
-    quantity: Number
+    quantity: Number,
+    currencyName: String
 });
 
 const bankDetails = new Schema({

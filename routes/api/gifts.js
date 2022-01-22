@@ -23,7 +23,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
         if (gift.redeemed)
             return res.status(400).send("Gift has already been redeemed")
 
-        const { currency, money } = gift
+        const { currency, money, currencyName } = gift
         var timestamp = new Date().getTime();
 
         var priceUrl = 'https://api.wazirx.com/sapi/v1/ticker/24hr?symbol=' + currency;
@@ -111,12 +111,13 @@ router.post("/redeem-gift", auth, async (req, res) => {
                                                     for (var i = 0; i < currencies.length; i++) {
                                                         if (currencies[i]['currency'] == currency) {
                                                             currencies[i]['quantity'] += new Number(data.executedQty);
-                                                            currencies[i]['quantity'] = currencies[i]['quantity'].toPrecision(5)
+                                                            currencies[i]['quantity'] = currencies[i]['quantity'].toPrecision(5);
+                                                            currencies[i]['currencyName'] = currencyName;
                                                             done = true;
                                                         }
                                                     }
                                                     if (!done)
-                                                        currencies.push({ 'currency': currency, 'quantity': data.executedQty });
+                                                        currencies.push({ 'currency': currency, 'quantity': data.executedQty, 'currencyName': currencyName });
                                                     console.log(currencies)
                                                     User.findByIdAndUpdate(req.user._id, { currencies: currencies, $inc: { balance: bal } }, function (err, docs) {
                                                         if (err) {
