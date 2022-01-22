@@ -149,7 +149,7 @@ router.post('/edit-profile', auth, (req, res) => {
             if (err)
                 res.status(500).send(err);
             if (info) {
-                res.status(200).send("User updated");
+                res.status(200).json({success: "User updated"});
             }
         });
     })
