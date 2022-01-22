@@ -9,6 +9,9 @@ const GiftSchema = new Schema({
         type: String,
         required: true
     },
+    currencyName: {
+        type: String
+    },
     money: {
         type: String,
         required: true
