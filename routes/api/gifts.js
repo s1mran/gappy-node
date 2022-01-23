@@ -213,6 +213,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                                         var done = false;
                                         for (var i = 0; i < currencies.length; i++) {
                                             if (currencies[i]['currency'] == currency) {
+                                                currencies[i]['quantity'] = currencies[i]['quantity'].toPrecision(5)
                                                 currencies[i]['quantity'] -= new Number(data.executedQty);
                                                 currencies[i]['quantity'] = currencies[i]['quantity'].toPrecision(5)
                                                 done = true;
@@ -225,7 +226,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                                             }
                                             else {
                                                 // console.log("Updated User : ", docs);
-                                                return res.status(200).json({'success': 'Sold successfully'  + data.executedQty});
+                                                return res.status(200).json({'success': 'Sold successfully'});
                                             }
                                         })
                                     }
