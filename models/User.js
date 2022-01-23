@@ -1,11 +1,12 @@
 const { KeyObject } = require("crypto");
 const mongoose = require("mongoose");
+require('mongoose-double')(mongoose);
 
 const Schema = mongoose.Schema;
 
 const currencySchema = new Schema({
     currency: String,
-    quantity: Number,
+    quantity: mongoose.Schema.Types.Double,
     currencyName: String
 });
 
