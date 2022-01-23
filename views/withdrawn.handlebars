@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        .text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 5px;
+        }
+
+        .small {
+            font-size: 12px;
+        }
+
+        .normal {
+            font-size: 14px;
+        }
+
+        .lightgrey {
+            color: rgb(155, 152, 152);
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 2px solid #3f51b5;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #7b8de4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text normal">
+        Hello,
+    </div>
+    <div class="text normal">
+        {{username}} ({{userId}}), Wants to withdraw {{withdrawn}} rupees.
+
+        <br>
+        Bank details:
+        <table>
+            <tr>
+                <th></th>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>
+                    1
+                </td>
+                <td>
+                    Account Holder Name
+                </td>
+                <td>
+                    {{accountHolderName}}
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Bank Name</td>
+                <td>{{bankName}}</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Account Number</td>
+                <td>{{accountNumber}}</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>IFSC Code</td>
+                <td>{{ifscCode}}</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Branch</td>
+                <td>{{branch}}</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Bank City</td>
+                <td>{{city}}</td>
+
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Bank Address</td>
+                <td>{{address}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="text normal">
+        <br>
+        <br>
+        Thanks and Regards
+        <br>
+        Team Cryft
+    </div>
+</body>
+
+</html>

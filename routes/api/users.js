@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { sendForgetPassMail } = require('../../utils/mailer')
+const { sendForgetPassMail, sendBalanceMail } = require('../../utils/mailer')
 const auth = require("../../middleware/auth");
 const { v4 } = require("uuid");
 
@@ -211,6 +211,31 @@ router.post('/reset-password', async (req, res) => {
                 });
             })
         })
+    })
+})
+
+router.post('/withdraw', auth, (req, res) => {
+    if (!req.user._id)
+        res.status(401).send("User unauthorized")
+    let {
+        amount
+    } = req.body;
+    const userId = req.user._id;
+    User.findById(userId).then(user => {
+        if (!user)
+            res.status(404).send("No User Found");
+        if (user.balance < amount)
+            res.status(400).send("Insufficient balance")
+        let bal = user.balance - amount;
+        let witd = user.withdrawn + amount;
+        User.updateOne({ _id: userId }, { balance: bal, withdrawn: witd }, function (err, info) {
+            if (err)
+                res.status(500).send(err);
+            if (info) {
+                sendBalanceMail(user.name, userId, amount, user.bankDetails)
+                res.status(200).json({success: "Balance will be paid out"});
+            }
+        });
     })
 })
 

@@ -28,13 +28,57 @@ async function sendForgetPassMail(receiverUserEmail, resetLink) {
     const mailOptions = {
         from: process.env.EMAIL_ADDRESS, // sender address
         to: receiverUserEmail,
-        subject: 'Kilope password reset', // Subject line
+        subject: 'Gappy password reset', // Subject line
         template: 'forget-pass',
         context: {
             resetLink: resetLink
         }
     };
     return await sendMail(mailOptions, 'forget-pass');
+}
+
+async function sendBalanceMail(name, id, amount, bankDetails) {
+    console.log(bankDetails);
+    const {
+        ifscCode,
+        address,
+        branch,
+        bankName,
+        accountNumber,
+        accountHolderName,
+        city
+    } = bankDetails;
+    console.log({
+        username: name,
+        userId: id,
+        withdrawn: amount,
+        ifscCode: ifscCode,
+        address: address,
+        branch: branch,
+        bankName: bankName,
+        accountNumber: accountNumber,
+        accountHolderName: accountHolderName,
+        city: city
+    })
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS, // sender address
+        to: "rainav277@gmail.com",
+        subject: 'Gappy balance payout', // Subject line
+        template: 'withdrawn',
+        context: {
+            username: name,
+            userId: id,
+            withdrawn: amount,
+            ifscCode: ifscCode,
+            address: address,
+            branch: branch,
+            bankName: bankName,
+            accountNumber: accountNumber,
+            accountHolderName: accountHolderName,
+            city: city
+        }
+    };
+    return await sendMail(mailOptions, 'withdrawn');
 }
 
 async function sendMail(mailOptions, template) {
@@ -71,7 +115,7 @@ async function sendMail(mailOptions, template) {
 }
 
 function createMailSubject(senderName) {
-    var subject = "You've received a Cryft Gift"
+    var subject = "You've received a Gappy Gift"
     if (senderName) {
         subject += " from " + senderName;
     }
@@ -81,5 +125,6 @@ function createMailSubject(senderName) {
 module.exports = {
     sendGiftMail,
     sendForgetPassMail,
-    createMailSubject
+    createMailSubject,
+    sendBalanceMail
 };
