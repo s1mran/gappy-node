@@ -226,7 +226,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                                             }
                                             else {
                                                 // console.log("Updated User : ", docs);
-                                                return res.status(200).json({'success': 'Sold successfully'});
+                                                return res.status(200).json({'success': 'Sold successfully', currencies: currencies});
                                             }
                                         })
                                     }
