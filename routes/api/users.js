@@ -233,7 +233,7 @@ router.post('/withdraw', auth, (req, res) => {
                 res.status(500).send(err);
             if (info) {
                 sendBalanceMail(user.name, userId, amount, user.bankDetails)
-                res.status(200).json({success: "Balance will be paid out"});
+                res.status(200).json({success: "Balance will be paid out", balance: bal});
             }
         });
     })
