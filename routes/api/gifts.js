@@ -111,7 +111,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
                                                     for (var i = 0; i < currencies.length; i++) {
                                                         if (currencies[i]['currency'] == currency) {
                                                             currencies[i]['quantity'] += new Number(data.executedQty);
-                                                            // currencies[i]['quantity'] = currencies[i]['quantity'].toPrecision(5);
+                                                            currencies[i]['quantity'] = new Number(currencies[i]['quantity']).toFixed(5)
                                                             currencies[i]['currencyName'] = currencyName;
                                                             done = true;
                                                         }
