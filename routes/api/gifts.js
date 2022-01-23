@@ -213,9 +213,9 @@ router.post("/sell-gift", auth, async (req, res) => {
                                         var done = false;
                                         for (var i = 0; i < currencies.length; i++) {
                                             if (currencies[i]['currency'] == currency) {
-                                                // currencies[i]['quantity'] = currencies[i]['quantity'].toPrecision(5)
                                                 currencies[i]['quantity'] -= new Number(data.executedQty);
-                                                // currencies[i]['quantity'] = currencies[i]['quantity'].toPrecision(5)
+                                                currencies[i]['quantity'] = new Number(currencies[i]['quantity']).toFixed(5)
+                                                console.log(currencies[i]['quantity']);
                                                 done = true;
                                             }
                                         }
