@@ -178,7 +178,7 @@ router.post('/reset-link-mail', async (req, res) => {
                 console.log("Updated pass reset : ", docs);
             }
         })
-        const resetLink = `https://kilope.com/reset-password/${token}`;
+        const resetLink = `https://gappy.in/reset-password/${token}`;
         try {
             await sendForgetPassMail(email, resetLink)
                 res.status(200).json({
