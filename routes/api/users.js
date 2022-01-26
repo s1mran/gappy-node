@@ -206,7 +206,7 @@ router.post('/reset-password', async (req, res) => {
                     User.updateOne({ _id: user._id }, { password: hash })
                         .then(async (user) => {
                             await PasswordReset.deleteOne({ _id: pass._id })
-                            res.status(201).send("Password has been reset.")
+                            res.status(201).send({"success":"Password has been reset."})
                         });
                 });
             })
