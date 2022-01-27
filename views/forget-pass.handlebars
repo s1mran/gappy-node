@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        .text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 5px;
+        }
+
+        .small {
+            font-size: 12px;
+        }
+
+        .normal {
+            font-size: 14px;
+        }
+
+        .lightgrey {
+            color: rgb(155, 152, 152);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text normal">
+        Hello, 
+    </div>
+    <div class="text normal">
+        There was a request to change your password!
+        <br>
+        <br>
+        If you did not make this request then please ignore this email.
+        <br>
+        <br>
+        Otherwise, please click this link to change your password: {{resetLink}}
+        <p class="small lightgrey">The link will get expired in 2 hours</p>
+    </div>
+    <div class="text normal">
+        <br>
+        <br>
+        Thanks and Regards
+        <br>
+        Team Cryft
+    </div>
+</body>
+
+</html>
