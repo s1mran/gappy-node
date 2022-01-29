@@ -14,6 +14,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
     if (!req.user._id)
         return res.status(401).send("User unauthorized")
     var redeemCode = req.body.reedemCode
+    console.log(redeemCode)
     if (redeemCode == 'this_is_redeemed')
         return res.status(400).send('Invalid redeem code');
     Gift.findOne({ 'redeemCode': redeemCode }).then((gift) => {
