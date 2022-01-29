@@ -1,27 +1,51 @@
 const nodeMailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 
-async function sendGiftMail(subject, senderUserName, senderUserEmail, receiverUserName, receiverUserEmail, currency, reedemCode) {
+async function sendGiftMail(subject, senderUserEmail, receiverUserEmail, currency, reedemCode) {
     const mailOptions = {
-        from: process.env.EMAIL_ADDRESS, // sender address
+        from: 'Gappy <' + process.env.EMAIL_ADDRESS + '>', // sender address
         to: receiverUserEmail,
         cc: senderUserEmail,
         replyTo: senderUserEmail,
         subject: subject, // Subject line
-        template: 'index',
+        template: 'mail',
         context: {
-            receiverName: receiverUserName,
-            senderName: senderUserName,
-            code: reedemCode,
-            crypto: currency
+            code: reedemCode
         },
-        attachments: [{
-            filename: 'gift-image.png',
-            path: __dirname + '/../images/gift-image.png',
-            cid: 'gift'
-        }]
+        attachments: [
+            {
+                filename: currency + '.jpg',
+                path: __dirname + '/../images/' + currency + '.jpg',
+                cid: 'gift'
+            },
+            {
+                filename:'1.png',
+                path: __dirname + '/../images/' +'1.png',
+                cid: '1'
+            },
+            {
+                filename:'2.png',
+                path: __dirname + '/../images/' +'2.png',
+                cid: '2'
+            },
+            {
+                filename:'3.png',
+                path: __dirname + '/../images/' +'3.png',
+                cid: '3'
+            },
+            {
+                filename:'4.png',
+                path: __dirname + '/../images/' +'4.png',
+                cid: '4'
+            },
+            {
+                filename:'5.png',
+                path: __dirname + '/../images/' +'5.png',
+                cid: '5'
+            }
+        ]
     };
-    return await sendMail(mailOptions, 'index');
+    return await sendMail(mailOptions, 'mail');
 }
 
 async function sendForgetPassMail(receiverUserEmail, resetLink) {
@@ -48,18 +72,6 @@ async function sendBalanceMail(name, id, amount, bankDetails) {
         accountHolderName,
         city
     } = bankDetails;
-    console.log({
-        username: name,
-        userId: id,
-        withdrawn: amount,
-        ifscCode: ifscCode,
-        address: address,
-        branch: branch,
-        bankName: bankName,
-        accountNumber: accountNumber,
-        accountHolderName: accountHolderName,
-        city: city
-    })
     const mailOptions = {
         from: process.env.EMAIL_ADDRESS, // sender address
         to: "rainav277@gmail.com",
