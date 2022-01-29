@@ -126,7 +126,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
                                                         }
                                                         else {
                                                             // console.log("Updated User : ", docs);
-                                                            return res.status(201).send('Gift Redeemed');
+                                                            return res.status(201).send({'success': 'Gift Redeemed'});
                                                         }
                                                     })
                                                 }
