@@ -149,6 +149,8 @@ router.post("/sell-gift", auth, async (req, res) => {
     if (!req.user._id)
         return res.status(401).send("User unauthorized")
     var { currency, quantity } = req.body
+    if (new Number(quantity) <= 0) 
+        res.status(500).send("Invalid currency quantity")
     User.findOne({ _id: req.user._id, 'currencies.currency': currency, 'currencies.quantity': { $gte: new Number(quantity) } }).then(user => {
         if (!user)
             return res.status(404).send("No user with given currency and quantity");
