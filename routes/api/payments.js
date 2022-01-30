@@ -54,13 +54,13 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
         console.log(redeemCode)
 
         try {
-            // const job = cron.schedule(formatDate(new Date(deliveryDateTime)), () => {
-            //     sendMail();
-            // });
-            // function sendMail() {
+            const job = cron.schedule(formatDate(new Date(deliveryDateTime)), () => {
+                sendMail();
+            });
+            function sendMail() {
                 sendGiftMail(subject, req.user.email, recipientEmail, currencyName, redeemCode);
-            //     job.stop();
-            // }
+                job.stop();
+            }
         } catch (e) {
             res.status(500).send(e);
         }
