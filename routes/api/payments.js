@@ -51,6 +51,7 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
             redeemCode: redeemCode,
             senderId: req.user._id
         });
+        console.log(redeemCode)
 
         try {
             // const job = cron.schedule(formatDate(new Date(deliveryDateTime)), () => {
