@@ -14,6 +14,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
     if (!req.user._id)
         return res.status(401).send("User unauthorized")
     var redeemCode = req.body.reedemCode
+    console.log(redeemCode)
     if (redeemCode == 'this_is_redeemed')
         return res.status(400).send('Invalid redeem code');
     Gift.findOne({ 'redeemCode': redeemCode }).then((gift) => {
@@ -36,24 +37,6 @@ router.post("/redeem-gift", auth, async (req, res) => {
             var lastPrice = JSON.parse(response.body).lastPrice;
             console.log(response.body)
             var quantity = (money) / (lastPrice);
-            //     Gift.updateOne({ 'redeemCode': redeemCode }, { 'redeemed': true, 'redeemDate': new Date(), 'redeemCode': 'this_is_redeemed' }, function (err, docs) {
-            //         if (err) {
-            //             console.log(err)
-            //         }
-            //         else {
-            //             console.log("Updated Gift : ", docs);
-            // User.findByIdAndUpdate(req.user._id, { "$push": { "currencies": { 'currency': currency, 'money': money, } } }, function (err, docs) {
-            //     if (err) {
-            //         console.log(err)
-            //     }
-            //     else {
-            //         console.log("Updated User : ", docs);
-            //         return res.status(201).send('Gift Redeemed');
-            //     }
-            // })
-
-            //         }
-            //     })
 
             var data = 'symbol=' + currency + '&side=buy&price=' + lastPrice + '&type=limit&quantity=' + quantity + '&recvWindow=10000&timestamp=' + timestamp;
             let signature = crypto
@@ -65,7 +48,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
             console.log(quantity)
             data += '&signature=' + signature;
             request({
-                url: "https://api.wazirx.com/sapi/v1/order/test",
+                url: "https://api.wazirx.com/sapi/v1/order",
                 method: "POST",
                 headers: {
                     'x-api-key': apiKey,
@@ -80,7 +63,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
                     function runInterval() {
                         // console.log(response.body)
                         const id = JSON.parse(response.body).id;
-                        queryOrder('2052745292', (resp) => {
+                        queryOrder(id, (resp) => {
                             if (resp.error) {
                                 clearInterval(this);
                                 return res.status(500).send(resp.error)
@@ -125,7 +108,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
                                                         }
                                                         else {
                                                             // console.log("Updated User : ", docs);
-                                                            return res.status(201).send('Gift Redeemed');
+                                                            return res.status(201).send({'success': 'Gift Redeemed'});
                                                         }
                                                     })
                                                 }
@@ -137,7 +120,7 @@ router.post("/redeem-gift", auth, async (req, res) => {
                             }
                         })
                     }
-                    setInterval(runInterval, 2000);
+                    setInterval(runInterval, 5000);
                 }
             });
         });
@@ -148,6 +131,8 @@ router.post("/sell-gift", auth, async (req, res) => {
     if (!req.user._id)
         return res.status(401).send("User unauthorized")
     var { currency, quantity } = req.body
+    if (new Number(quantity) <= 0) 
+        res.status(500).send("Invalid currency quantity")
     User.findOne({ _id: req.user._id, 'currencies.currency': currency, 'currencies.quantity': { $gte: new Number(quantity) } }).then(user => {
         if (!user)
             return res.status(404).send("No user with given currency and quantity");
@@ -182,7 +167,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                 console.log(quantity)
                 data += '&signature=' + signature;
                 request({
-                    url: "https://api.wazirx.com/sapi/v1/order/test",
+                    url: "https://api.wazirx.com/sapi/v1/order",
                     method: "POST",
                     headers: {
                         'x-api-key': apiKey,
@@ -197,7 +182,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                         function runInterval() {
                             // console.log(response.body)
                             const id = JSON.parse(response.body).id;
-                            queryOrder('2052745292', (resp) => {
+                            queryOrder(id, (resp) => {
                                 if (resp.error) {
                                     clearInterval(this);
                                     return res.status(500).send(resp.error)
@@ -233,7 +218,7 @@ router.post("/sell-gift", auth, async (req, res) => {
                                 }
                             })
                         }
-                        setInterval(runInterval, 2000);
+                        setInterval(runInterval, 5000);
                     }
                 });
             });

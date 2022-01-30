@@ -34,7 +34,7 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
         res.status(401).send("User unauthorized")
 
     const { orderId, paymentId, sig, ...rest } = req.body;
-    const { currency, deliveryDateTime, recipientName, recipientEmail } = rest;
+    const { currencyName, deliveryDateTime, recipientName, recipientEmail } = rest;
 
     let data = orderId + "|" + paymentId;
     let signature = crypto
@@ -51,15 +51,16 @@ router.post("/verify-and-add-gift", auth, async (req, res) => {
             redeemCode: redeemCode,
             senderId: req.user._id
         });
+        console.log(redeemCode)
 
         try {
-            // const job = cron.schedule(formatDate(new Date(deliveryDateTime)), () => {
-            //     sendMail();
-            // });
-            // function sendMail() {
-                sendGiftMail(subject, req.user.name, req.user.email, recipientName, recipientEmail, currency, redeemCode);
-            //     job.stop();
-            // }
+            const job = cron.schedule(formatDate(new Date(deliveryDateTime)), () => {
+                sendMail();
+            });
+            function sendMail() {
+                sendGiftMail(subject, req.user.email, recipientEmail, currencyName, redeemCode);
+                job.stop();
+            }
         } catch (e) {
             res.status(500).send(e);
         }
