@@ -34,8 +34,13 @@ router.post("/redeem-gift", auth, async (req, res) => {
         }, function (error, response, body) {
             if (error)
                 return res.send(500).send(error);
+            var mg2 = JSON.parse(response.body).message;
+            if (mg2 == 'symbol does not have a valid value'){
+                return res.status(500).send(mg2)
+            }
             var lastPrice = JSON.parse(response.body).lastPrice;
-            console.log(response.body)
+
+            // console.log(response.body)
             var quantity = (money) / (lastPrice);
 
             var data = 'symbol=' + currency + '&side=buy&price=' + lastPrice + '&type=limit&quantity=' + quantity + '&recvWindow=10000&timestamp=' + timestamp;
@@ -63,6 +68,10 @@ router.post("/redeem-gift", auth, async (req, res) => {
                     function runInterval() {
                         // console.log(response.body)
                         const id = JSON.parse(response.body).id;
+                        var mg1 = JSON.parse(response.body).message;
+                        if (mg1 == 'symbol does not have a valid value' || !id){
+                            res.status(500).send(mg1)
+                        clearInterval(this);}
                         queryOrder(id, (resp) => {
                             if (resp.error) {
                                 clearInterval(this);
@@ -73,6 +82,11 @@ router.post("/redeem-gift", auth, async (req, res) => {
                                 var data = JSON.parse(resp.resp.body);
                                 var bal = money - Math.round(data.executedQty * data.price) - 1;
                                 console.log(bal);
+                                var mg = JSON.parse(resp.resp.body).message;
+                                if (mg == 'orderId is invalid' || mg == 'Too many api request'){
+                                    clearInterval(this);
+                                    res.status(500).send(mg)
+                                }
                                 if (JSON.parse(resp.resp.body).status == 'done') {
                                     clearInterval(this);
                                     Gift.updateOne({ 'redeemCode': redeemCode }, {
@@ -155,8 +169,12 @@ router.post("/sell-gift", auth, async (req, res) => {
             }, function (error, response, body) {
                 if (error)
                     return res.send(500).send(error);
+                var mg2 = JSON.parse(response.body).message;
+                if (mg2 == 'symbol does not have a valid value'){
+                    res.status(500).send(mg2)
+                }
                 var lastPrice = JSON.parse(response.body).lastPrice;
-                console.log(response.body)
+                // console.log(response.body)
                 var data = 'symbol=' + currency + '&side=sell&price=' + lastPrice + '&type=limit&quantity=' + quantity + '&recvWindow=10000&timestamp=' + timestamp;
                 let signature = crypto
                     .createHmac("sha256", secretKey)
@@ -178,23 +196,29 @@ router.post("/sell-gift", auth, async (req, res) => {
                     if (error)
                         return res.status(500).send(error)
                     if (response) {
-                        console.log(response)
+                        // console.log(response)
                         function runInterval() {
                             // console.log(response.body)
                             const id = JSON.parse(response.body).id;
+                            var mg1 = JSON.parse(response.body).message;
+                            console.log(mg1)
+                            if (mg1 == 'symbol does not have a valid value' || !id){
+                                res.status(500).send(mg1)
+                                clearInterval(this);}
                             queryOrder(id, (resp) => {
                                 if (resp.error) {
                                     clearInterval(this);
                                     return res.status(500).send(resp.error)
                                 }
                                 if (resp.resp) {
-                                    console.log(JSON.parse(resp.resp.body))
+                                    // console.log(JSON.parse(resp.resp.body))
                                     var data = JSON.parse(resp.resp.body);
                                     var bal = Math.round(data.executedQty * data.price) - 1;
                                     console.log(bal);
                                     var mg = JSON.parse(resp.resp.body).message;
-                                    if (mg == 'orderId is invalid' || mg == 'Too many api request')
-                                        clearInterval(this);
+                                    if (mg == 'orderId is invalid' || mg == 'Too many api request'){
+                                        res.status(500).send(mg)
+                                        clearInterval(this);}
                                     if (JSON.parse(resp.resp.body).status == 'done') {
                                         clearInterval(this);
                                         var currencies = user.currencies;
