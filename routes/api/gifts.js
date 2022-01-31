@@ -192,6 +192,9 @@ router.post("/sell-gift", auth, async (req, res) => {
                                     var data = JSON.parse(resp.resp.body);
                                     var bal = Math.round(data.executedQty * data.price) - 1;
                                     console.log(bal);
+                                    var mg = JSON.parse(resp.resp.body).message;
+                                    if (mg == 'orderId is invalid' || mg == 'Too many api request')
+                                        clearInterval(this);
                                     if (JSON.parse(resp.resp.body).status == 'done') {
                                         clearInterval(this);
                                         var currencies = user.currencies;
