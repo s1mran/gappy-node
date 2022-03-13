@@ -52,7 +52,7 @@ async function sendForgetPassMail(receiverUserEmail, resetLink) {
     const mailOptions = {
         from: process.env.EMAIL_ADDRESS, // sender address
         to: receiverUserEmail,
-        subject: 'Gappy password reset', // Subject line
+        subject: 'Kilope password reset', // Subject line
         template: 'forget-pass',
         context: {
             resetLink: resetLink
@@ -75,7 +75,7 @@ async function sendBalanceMail(name, id, amount, bankDetails) {
     const mailOptions = {
         from: process.env.EMAIL_ADDRESS, // sender address
         to: "rainav277@gmail.com",
-        subject: 'Gappy balance payout', // Subject line
+        subject: 'Kilope balance payout', // Subject line
         template: 'withdrawn',
         context: {
             username: name,
@@ -127,7 +127,7 @@ async function sendMail(mailOptions, template) {
 }
 
 function createMailSubject(senderName) {
-    var subject = "You've received a Gappy Gift"
+    var subject = "You've received a Kilope Gift"
     if (senderName) {
         subject += " from " + senderName;
     }

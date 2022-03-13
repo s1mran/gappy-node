@@ -9,6 +9,7 @@ dotenv.config();
 const users = require("./routes/api/users");
 const payments = require("./routes/api/payments");
 const gifts = require("./routes/api/gifts");
+const invest = require("./routes/api/invest");
 const commons = require("./routes/api/commons");
  
 
@@ -43,6 +44,7 @@ require("./config/passport")(passport);
 // Routes
 app.use("/api/users", users);
 app.use("/api/payments", payments);
+app.use("/api/invest", invest);
 app.use("/api/gifts", gifts);
 app.use("/api", commons);
 

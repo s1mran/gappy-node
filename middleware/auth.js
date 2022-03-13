@@ -12,6 +12,8 @@ const auth = async (req, res, next)=>{
         }
         req.token = token
         req.user = user
+        req.user.apiKey = process.env.WZRX_API_KEY;
+        req.user.apiSecret = process.env.WZRX_SECRET_KEY;
         next();
     } catch (error) {
         res.status(401).send("User unAuthorized")

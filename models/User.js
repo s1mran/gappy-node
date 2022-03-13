@@ -10,6 +10,12 @@ const currencySchema = new Schema({
     currencyName: String
 });
 
+const exchangeSchema = new Schema({
+    apiKey: String,
+    secretKey: String, 
+    exchange: String
+})
+
 const bankDetails = new Schema({
     ifscCode: String,
     address: String,
@@ -18,6 +24,11 @@ const bankDetails = new Schema({
     accountNumber: String,
     accountHolderName: String,
     city: String
+})
+
+const sagSchema = new Schema ({
+    name: String,
+    currencies:  [currencySchema]
 })
 
 // Create Schema
@@ -65,7 +76,9 @@ const UserSchema = new Schema({
         type: Number,
         default: 0
     },
-    img: String
+    sags: [sagSchema],
+    img: String,
+    exchanges: [exchangeSchema]
 });
 
 

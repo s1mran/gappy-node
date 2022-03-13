@@ -125,7 +125,7 @@ router.get("/profile", auth, (req, res) => {
     if (!req.user._id)
         res.status(401).send("User unauthorized")
 
-    User.findById(req.user._id, { password: false, _id: false }).then(user => {
+    User.findById(req.user._id, { password: false, _id: false, exchanges: false}).then(user => {
         if (!user)
             return res.status(404).send('User not found')
         res.status(200).send(user);
@@ -178,7 +178,7 @@ router.post('/reset-link-mail', async (req, res) => {
                 console.log("Updated pass reset : ", docs);
             }
         })
-        const resetLink = `https://gappy.in/reset-password/${token}`;
+        const resetLink = `https://kilope.com/reset-password/${token}`;
         try {
             await sendForgetPassMail(email, resetLink)
                 res.status(200).json({
